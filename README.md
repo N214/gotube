@@ -8,9 +8,9 @@ PubSubHubbub -> Cloud functions -> Cloud Storage -> Slack
 
 This implementation ignores the update video notification by leveraging a state file in the GCS
 
-# TODO
+## TODO
 - Add ngrock doc for local run
 - Split checkDataHistory into CheckDataHistory and writeDataHistory
 
 
-# Local run
+## Local run
