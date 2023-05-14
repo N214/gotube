@@ -6,13 +6,10 @@ import (
 	"context"
 	"fmt"
 	"io"
-
 	//"io/ioutil"
 	"log"
-
 	//"os"
 	"strings"
-
 	// "net"
 	"encoding/xml"
 	"net/http"
