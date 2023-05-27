@@ -11,6 +11,7 @@ This implementation ignores the update video notification by leveraging a state 
 ## TODO
 - Add ngrock doc for local run
 - Split checkDataHistory into CheckDataHistory and writeDataHistory
+- Add automatically state file creation
 
 
 ## Local run
