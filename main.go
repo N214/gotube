@@ -22,10 +22,8 @@ func main() {
 	// router
 	r := mux.NewRouter()
 	r.HandleFunc("/webhooks", app.webhook).Methods("POST")
-	//r.HandleFunc("/sub", subscribe).Methods("POST")
-	port := ":8080"
+	port := ":8089"
 
-	// http.HandleFunc("/", webhook)
 
 	// Better to create a new server and use our own error log logger with
 	svr := &http.Server{

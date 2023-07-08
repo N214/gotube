@@ -2,9 +2,11 @@ package main
 
 import (
 	"net/http"
+	"fmt"
 )
 
 func (app *application) webhook(res http.ResponseWriter, req *http.Request) {
+	fmt.Println("webhook")
 	challenge := req.URL.Query().Get("hub.challenge")
 	if challenge == "" {
 		contentType := req.Header.Get("Content-Type")

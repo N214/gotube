@@ -10,12 +10,19 @@ import (
 	"strings"
 	"net/url"
 	"fmt"
-	//"os"
+	"os"
 
 	"cloud.google.com/go/storage"
 	"github.com/slack-go/slack"
 
 )
+
+func (ei *MyEnvInitializer) Initialize() (string, string, string) {
+	PUBSUB_URL := os.Getenv("PUBSUB_URL")
+	CALLBACK_URL := os.Getenv("CALLBACK_URL")
+	YT_TOPIC := os.Getenv("YT_TOPIC")
+	return PUBSUB_URL, CALLBACK_URL, YT_TOPIC
+}
 
 func (app *application) paseXML(req *http.Request) (*Feed, error) {
 	var data Feed
@@ -24,7 +31,6 @@ func (app *application) paseXML(req *http.Request) (*Feed, error) {
 	err := xml.Unmarshal(bytes, &data)
 
 	if err != nil {
-		//fmt.Println("Error parsing XML:", err)
 		app.errorLog.Println(err.Error())
 		return &data, err
 	}
@@ -32,15 +38,15 @@ func (app *application) paseXML(req *http.Request) (*Feed, error) {
 }
 
 func (app *application) checkDataHistory(id string) *string {
-	// Check Data History from GCS
-	// Download data from GCS
-
 	// Init GCS
 	bucket := "buk-youtube-data-dev"
 	object := "video-history.log"
 	ctx := context.Background()
+
 	client, err := storage.NewClient(ctx)
-	app.checkErr(err)
+	if err != nil {
+		app.errorLog.Println(err.Error())
+	}
 	defer client.Close()
 
 	// Use GCS
@@ -67,15 +73,9 @@ func (app *application) checkDataHistory(id string) *string {
 	for scanner.Scan() {
 		line := scanner.Text()
 		if line == id {
-			//if strings.Contains(line, id) {
 			found = true
 			break
 		}
-		// data := fmt.Sprintf("%s\n", id)
-		// appendStr := []byte(data)
-		// defer f.Close()
-		// app.checkErr(err)
-		// f.Write(appendStr)
 
 		// Check if there was an error scanning the file
 		err := scanner.Err()
@@ -87,21 +87,11 @@ func (app *application) checkDataHistory(id string) *string {
 
 		appendStr := []byte(data)
 		b3 := append(history, appendStr...)
-		//fmt.Println(string(b3))
-
-		//f, err := os.OpenFile(string(history), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-		//app.checkErr(err)
-		//defer f.Close()
-
-		//_, err = f.WriteString(data)
-		//app.checkErr(err)
 		app.infoLog.Printf("Added %s to database\n", id)
 
 		// Upload to GCS
-		// Create a writer to upload the data
 		wc := o.NewWriter(ctx)
 		if _, err := wc.Write(b3); err != nil {
-			//log.Fatalf("Failed to write object: %v", err)
 			app.errorLog.Println(err.Error())
 		}
 
@@ -117,15 +107,11 @@ func (app *application) checkDataHistory(id string) *string {
 		app.infoLog.Println("Video already exists")
 		return nil
 	}
-
-	// Upload new data to GCS
 }
 
 func (app *application) checkErr(err error) {
 	if err != nil {
-		//application.errorLog.Fatal("%v", err)
 		app.infoLog.Fatal(err.Error())
-		//log.Fatalf("%v", err)
 	}
 }
 
@@ -141,15 +127,13 @@ func (app *application) pushtoSlack(data string) {
 }
 
 func (app *application) renewSub() string {
-	pubsub := "https://pubsubhubbub.appspot.com/"
 
-	data := url.Values{}
-
-	callback := "https://northamerica-northeast1-development-brainfinance.cloudfunctions.net/cf-yt-notification-bot"
-	topic := "https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCsBjURrPoezykLs9EqgamOA"
+    var initializer GetEnv = &MyEnvInitializer{}
+	pubsub, callback, topic := initializer.Initialize()
 	mode := "subscribe"
 	verify := "sync"
 
+	data := url.Values{}
 	data.Set("hub.verify", verify)
 	data.Set("hub.topic", topic)
 	data.Set("hub.mode", mode)

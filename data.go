@@ -35,3 +35,8 @@ type application struct {
 	errorLog *log.Logger
 	infoLog *log.Logger 
 }
+
+type GetEnv interface {
+    Initialize() (string, string, string)
+}
+type MyEnvInitializer struct{}
