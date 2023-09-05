@@ -1,4 +1,4 @@
-package gotube
+package youtubenotify
 
 import (
 	"context"

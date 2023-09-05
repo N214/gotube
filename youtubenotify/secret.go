@@ -1,4 +1,4 @@
-package gotube
+package youtubenotify
 
 import (
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"

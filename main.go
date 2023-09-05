@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	 _ "github.com/N214/gotube/gotube"
+	 _ "github.com/N214/gotube/youtubenotify"
 	"github.com/GoogleCloudPlatform/functions-framework-go/funcframework"
 )
 
