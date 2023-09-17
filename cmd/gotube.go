@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"os"
 
-	//"github.com/GoogleCloudPlatform/functions-framework-go/funcframework"
-	//"github.com/GoogleCloudPlatform/functions-framework-go/functions"
 	"github.com/gorilla/mux"
 )
 
@@ -44,25 +42,3 @@ func Run() (err error) {
 	}
 	return
 }
-
-//func init() {
-//	// logger
-//	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
-//	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
-//
-//
-//	// Initialize a new instance of our application struct, containing the // dependencies.
-//	app := &application{
-//		errorLog: errorLog,
-//		infoLog: infoLog, 
-//	}
-//
-//	//functions.HTTP("webhook", app.webhook)
-//	//funcframework.RegisterHTTPFunction("webhook", app.webhook)
-//	funcframework.RegisterHTTPFunctionContext(context.TODO(), "webhook", app.webhook)
-//	port := ":8089"
-//
-//	// export myFunc as env variable
-//	os.Setenv("FUNCTION_TARGET", "webhook")
-//	infoLog.Printf("Starting server on localhost%s", port)
-//}
